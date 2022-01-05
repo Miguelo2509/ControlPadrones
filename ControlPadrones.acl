@@ -1,0 +1,235 @@
+@ACL1500
+
+
+^LAYOUT   PadronRGS                                                           48 D,T.
+Campo_1        ASCII       1   1    
+Campo_2        PRINT       2   8 0  
+Campo_3        PRINT      10   8 0  
+Campo_4        PRINT      18   8 0  
+Campo_5        ASCII      26  11    
+Campo_6        ASCII      37   1    
+Campo_7        ASCII      38   1    
+Campo_8        ASCII      39   1    
+Campo_9        PRINT      40   4 2  
+Campo_10       PRINT      44   2 0  
+Campo_11       PRINT      46   1 0  
+CUIT           COMPUTED             
+ *C 20 1 
+ SUBSTRING(Campo_5;1;20)
+^LAYOUT   RG                                                                  53 D,T.
+Campo_1        ASCII       1   8    
+Campo_2        ASCII       9   8    
+Campo_3        ASCII      17   8    
+Campo_4        ASCII      25  11    
+Campo_5        ASCII      36   1    
+Campo_6        ASCII      37   1    
+Campo_7        ASCII      38   1    
+Campo_8        PRINT      39   4 2  
+Campo_9        PRINT      43   4 2  
+Campo_10       ASCII      47   2    
+Campo_11       ASCII      49   2    
+Campo_12       ASCII      51   1    
+CUIT           COMPUTED             
+ *C 20 1 
+ SUBSTRING(Campo_4;1;20)
+^LAYOUT   ProveedoresSAP                                                      22 D,T.
+!"PadronRGS" "IxPadronRGSCUIT" CUIT
+!"RG" "IxRGCUIT" CUIT
+Acreedor       PRINT       1   6 0  
+N__ident_fis_1 ASCII       7  16    
+CUIT           COMPUTED             
+ *C 20 1 
+ SUBSTRING(N__ident_fis_1;1;20)
+AlicuotaARBA   COMPUTED             
+ *N 2 1
+ DEC(PadronRGS.Campo_9;2)
+AlicuotaCABA   COMPUTED             
+ *N 2 1
+ DEC(RG.Campo_9;2)
+^FOLDER   Script                                                               1544014050
+[PARENT_FOLDER_ID] 0
+^FOLDER   Tablas                                                               1577449309
+[PARENT_FOLDER_ID] 0
+^LOGFILE  ControlPadrones                                                                                                                                                                                                                                                      "" "ControlPadrones.LOG"
+[PARENT_FOLDER_ID] 0
+^BATCH    S01_AX                                                              
+[PARENT_FOLDER_ID] 1544014050
+COMMENT
+//ANALYTIC ControlPadrones
+//RESULT TABLE *.*
+//RESULT FILE *.txt
+//RESULT LOG
+END
+
+
+
+SET SAFETY OFF
+
+DO S02_Borrar
+DO S04_DescargaWeb
+DO S05_unZIP
+DO S08_Armar
+
+SET SAFETY ON
+^BATCH    S01_Local                                                           
+[PARENT_FOLDER_ID] 1544014050
+SET SAFETY OFF
+
+DO S03_Configuracion
+DO S04_Importar
+DO S08_Armar
+
+SET SAFETY ON
+
+^BATCH    S03_Configuracion                                                   
+[PARENT_FOLDER_ID] 1544014050
+
+COMM
+Para el directorio de Impuestos
+
+v_ayer = TODAY() - 1
+Nom = UPPER(CMOY(v_ayer;3)) + STRING(YEAR(v_ayer);4)
+
+vDirectorio = "S:\ACL\Control\"
+^BATCH    S08_Armar                                                           
+[PARENT_FOLDER_ID] 1544014050
+SET SAFETY OFF
+
+SET FOLDER /Tablas
+
+OPEN PadronRGS
+DELETE FIELD CUIT OK
+DEFINE FIELD CUIT COMPUTED SUBSTRING(Campo_5;1;20)
+
+INDEX ON CUIT TO "IxPadronRGSCUIT"
+
+OPEN RG
+DELETE FIELD CUIT OK
+DEFINE FIELD CUIT COMPUTED SUBSTRING(Campo_4;1;20)
+
+INDEX ON CUIT TO "IxRGCUIT"
+
+OPEN ProveedoresSAP
+DELETE FIELD CUIT OK
+DEFINE FIELD CUIT COMPUTED SUBSTRING(N__ident_fis_1;1;20)
+
+DEFINE RELATION CUIT WITH PadronRGS INDEX IxPadronRGSCUIT
+DEFINE RELATION CUIT WITH RG INDEX IxRGCUIT
+
+DELETE FIELD AlicuotaARBA OK
+DEFINE FIELD AlicuotaARBA COMPUTED DEC(PadronRGS.Campo_9;2)
+
+DELETE FIELD AlicuotaCABA OK
+DEFINE FIELD AlicuotaCABA COMPUTED DEC(RG.Campo_9;2)
+
+
+EXPORT FIELDS Acreedor CUIT AlicuotaARBA AlicuotaCABA XLSX TO "%vDirectorio%Control%Nom%"
+
+
+SET SAFETY ON
+^FORMAT   ProveedoresSAP                                                      ProveedoresSAP                                                    "" "ProveedoresSAP.fil" 0 ASCII 
+[PARENT_FOLDER_ID] 1577449309
+[LASTVIEW] "Vista_predeterminada"
+[RETRIEVE] 0
+[REFRESH] EXCEL "ProveedoresSAP.fil" FROM "S:\ACL\Control\Archivos\ProveedoresSAP.xlsx" TABLE "SAP$" KEEPTITLE FIELD "Acreedor" N WID 6 DEC 0 AS "" FIELD "N__ident_fis_1" C WID 16 AS ""
+^REPORT   Vista_predeterminada                                                PadronRGS                                                         D,T.
+[SKIP] 0
+[TLINES] 1
+[RLINES] 1
+[LINE] 1
+Campo_1              WIDTH 10 PICTURE ""
+[LINE] 1
+Campo_2              WIDTH 10 PICTURE ""
+[LINE] 1
+Campo_3              WIDTH 10 PICTURE ""
+[LINE] 1
+Campo_4              WIDTH 10 PICTURE ""
+[LINE] 1
+Campo_5              PICTURE ""
+[LINE] 1
+Campo_6              WIDTH 10 PICTURE ""
+[LINE] 1
+Campo_7              WIDTH 10 PICTURE ""
+[LINE] 1
+Campo_8              WIDTH 10 PICTURE ""
+[LINE] 1
+Campo_9              WIDTH 10 PICTURE ""
+[LINE] 1
+Campo_10             WIDTH 10 PICTURE ""
+[LINE] 1
+Campo_11             WIDTH 10 PICTURE ""
+[LINE] 1
+CUIT                 WIDTH 11 PICTURE ""
+^FORMAT   PadronRGS                                                           PadronRGS                                                         "" "PadronRGS.fil" 0 ASCII 
+[PARENT_FOLDER_ID] 1577449309
+[LASTVIEW] "Vista_predeterminada"
+[RETRIEVE] 0
+[REFRESH] DELIMITED "PadronRGS.fil" FROM "S:\ACL\Control\Archivos\PadronRGS.txt" 0 SEPARATOR ";" QUALIFIER NONE CONSECUTIVE STARTLINE 1 REPLACENULL FIELD "Campo_1" C AT 1 DEC 0 WID 1 PIC "" AS "" FIELD "Campo_2" N AT 2 DEC 0 WID 8 PIC "" AS "" FIELD "Campo_3" N AT 10 DEC 0 WID 8 PIC "" AS "" FIELD "Campo_4" N AT 18 DEC 0 WID 8 PIC "" AS "" FIELD "Campo_5" C AT 26 DEC 0 WID 11 PIC "" AS "" FIELD "Campo_6" C AT 37 DEC 0 WID 1 PIC "" AS "" FIELD "Campo_7" C AT 38 DEC 0 WID 1 PIC "" AS "" FIELD "Campo_8" C AT 39 DEC 0 WID 1 PIC "" AS "" FIELD "Campo_9" N AT 40 DEC 2 WID 4 PIC "" AS "" FIELD "Campo_10" N AT 44 DEC 0 WID 2 PIC "" AS "" FIELD "Campo_11" N AT 46 DEC 0 WID 1 PIC "" AS "" 
+^BATCH    S04_Importar                                                        
+[PARENT_FOLDER_ID] 1544014050
+
+SET FOLDER /Tablas
+
+IMPORT EXCEL TO ProveedoresSAP "ProveedoresSAP.fil" FROM "S:\ACL\Control\Archivos\ProveedoresSAP.xlsx" TABLE "SAP$" KEEPTITLE FIELD "Acreedor" N WID 6 DEC 0 AS "" FIELD "N__ident_fis_1" C WID 16 AS ""
+
+OPEN ProveedoresSAP
+
+IMPORT DELIMITED TO PadronRGS "PadronRGS.fil" FROM "S:\ACL\Control\Archivos\PadronRGS.txt" 0 SEPARATOR ";" QUALIFIER NONE CONSECUTIVE STARTLINE 1 REPLACENULL FIELD "Campo_1" C AT 1 DEC 0 WID 1 PIC "" AS "" FIELD "Campo_2" N AT 2 DEC 0 WID 8 PIC "" AS "" FIELD "Campo_3" N AT 10 DEC 0 WID 8 PIC "" AS "" FIELD "Campo_4" N AT 18 DEC 0 WID 8 PIC "" AS "" FIELD "Campo_5" C AT 26 DEC 0 WID 11 PIC "" AS "" FIELD "Campo_6" C AT 37 DEC 0 WID 1 PIC "" AS "" FIELD "Campo_7" C AT 38 DEC 0 WID 1 PIC "" AS "" FIELD "Campo_8" C AT 39 DEC 0 WID 1 PIC "" AS "" FIELD "Campo_9" N AT 40 DEC 2 WID 4 PIC "" AS "" FIELD "Campo_10" N AT 44 DEC 0 WID 2 PIC "" AS "" FIELD "Campo_11" N AT 46 DEC 0 WID 1 PIC "" AS "" 
+
+OPEN PadronRGS
+
+IMPORT DELIMITED TO RG "RG.fil" FROM "S:\ACL\Control\Archivos\RG.txt" 0 SEPARATOR ";" QUALIFIER NONE CONSECUTIVE STARTLINE 1 REPLACENULL FIELD "Campo_1" C AT 1 DEC 0 WID 8 PIC "" AS "" FIELD "Campo_2" C AT 9 DEC 0 WID 8 PIC "" AS "" FIELD "Campo_3" C AT 17 DEC 0 WID 8 PIC "" AS "" FIELD "Campo_4" C AT 25 DEC 0 WID 11 PIC "" AS "" FIELD "Campo_5" C AT 36 DEC 0 WID 1 PIC "" AS "" FIELD "Campo_6" C AT 37 DEC 0 WID 1 PIC "" AS "" FIELD "Campo_7" C AT 38 DEC 0 WID 1 PIC "" AS "" FIELD "Campo_8" N AT 39 DEC 2 WID 4 PIC "" AS "" FIELD "Campo_9" N AT 43 DEC 2 WID 4 PIC "" AS "" FIELD "Campo_10" C AT 47 DEC 0 WID 2 PIC "" AS "" FIELD "Campo_11" C AT 49 DEC 0 WID 2 PIC "" AS "" FIELD "Campo_12" C AT 51 DEC 0 WID 1 PIC "" AS "" 
+
+OPEN RG
+^REPORT   Vista_predeterminada                                                RG                                                                D,T.
+[SKIP] 0
+[TLINES] 1
+[RLINES] 1
+[LINE] 1
+Campo_1              WIDTH 10 PICTURE ""
+[LINE] 1
+Campo_2              WIDTH 10 PICTURE ""
+[LINE] 1
+Campo_3              WIDTH 10 PICTURE ""
+[LINE] 1
+Campo_4              PICTURE ""
+[LINE] 1
+Campo_5              WIDTH 10 PICTURE ""
+[LINE] 1
+Campo_6              WIDTH 10 PICTURE ""
+[LINE] 1
+Campo_7              WIDTH 10 PICTURE ""
+[LINE] 1
+Campo_8              WIDTH 10 PICTURE ""
+[LINE] 1
+Campo_9              WIDTH 10 PICTURE ""
+[LINE] 1
+Campo_10             WIDTH 10 PICTURE ""
+[LINE] 1
+Campo_11             WIDTH 10 PICTURE ""
+[LINE] 1
+Campo_12             WIDTH 10 PICTURE ""
+^FORMAT   RG                                                                  RG                                                                "" "RG.fil" 0 ASCII 
+[PARENT_FOLDER_ID] 1577449309
+[LASTVIEW] "Vista_predeterminada"
+[RETRIEVE] 0
+[REFRESH] DELIMITED "RG.fil" FROM "S:\ACL\Control\Archivos\RG.txt" 0 SEPARATOR ";" QUALIFIER NONE CONSECUTIVE STARTLINE 1 REPLACENULL FIELD "Campo_1" C AT 1 DEC 0 WID 8 PIC "" AS "" FIELD "Campo_2" C AT 9 DEC 0 WID 8 PIC "" AS "" FIELD "Campo_3" C AT 17 DEC 0 WID 8 PIC "" AS "" FIELD "Campo_4" C AT 25 DEC 0 WID 11 PIC "" AS "" FIELD "Campo_5" C AT 36 DEC 0 WID 1 PIC "" AS "" FIELD "Campo_6" C AT 37 DEC 0 WID 1 PIC "" AS "" FIELD "Campo_7" C AT 38 DEC 0 WID 1 PIC "" AS "" FIELD "Campo_8" N AT 39 DEC 2 WID 4 PIC "" AS "" FIELD "Campo_9" N AT 43 DEC 2 WID 4 PIC "" AS "" FIELD "Campo_10" C AT 47 DEC 0 WID 2 PIC "" AS "" FIELD "Campo_11" C AT 49 DEC 0 WID 2 PIC "" AS "" FIELD "Campo_12" C AT 51 DEC 0 WID 1 PIC "" AS "" 
+^INDEX    IxPadronRGSCUIT                                                     PadronRGS                                                         "" "IxPadronRGSCUIT.INX" 
+*INDEX ON CUIT TO "IXPADRONRGSCUIT"
+^INDEX    IxRGCUIT                                                            RG                                                                "" "IxRGCUIT.INX" 
+*INDEX ON CUIT TO "IXRGCUIT"
+^REPORT   Vista_predeterminada                                                ProveedoresSAP                                                    D,T.
+[SKIP] 0
+[TLINES] 1
+[RLINES] 1
+[LINE] 1
+Acreedor             PICTURE ""
+[LINE] 1
+N__ident_fis_1       WIDTH 13 PICTURE ""
+[LINE] 1
+CUIT                 WIDTH 11 PICTURE ""
+[LINE] 1
+AlicuotaARBA         WIDTH 13 PICTURE ""
+[LINE] 1
+AlicuotaCABA         PICTURE ""
+^OPEN b,T,S08_Armar;a,F,ControlPadrones;b,T,S03_Configuracion;b,T,S04_Importar;f,F,ProveedoresSAP;
