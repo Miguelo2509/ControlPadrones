@@ -127,11 +127,6 @@ EXPORT FIELDS Acreedor CUIT AlicuotaARBA AlicuotaCABA XLSX TO "%vDirectorio%Cont
 
 
 SET SAFETY ON
-^FORMAT   ProveedoresSAP                                                      ProveedoresSAP                                                    "" "ProveedoresSAP.fil" 0 ASCII 
-[PARENT_FOLDER_ID] 1577449309
-[LASTVIEW] "Vista_predeterminada"
-[RETRIEVE] 0
-[REFRESH] EXCEL "ProveedoresSAP.fil" FROM "S:\ACL\Control\Archivos\ProveedoresSAP.xlsx" TABLE "SAP$" KEEPTITLE FIELD "Acreedor" N WID 6 DEC 0 AS "" FIELD "N__ident_fis_1" C WID 16 AS ""
 ^REPORT   Vista_predeterminada                                                PadronRGS                                                         D,T.
 [SKIP] 0
 [TLINES] 1
@@ -214,10 +209,6 @@ Campo_12             WIDTH 10 PICTURE ""
 [LASTVIEW] "Vista_predeterminada"
 [RETRIEVE] 0
 [REFRESH] DELIMITED "RG.fil" FROM "S:\ACL\Control\Archivos\RG.txt" 0 SEPARATOR ";" QUALIFIER NONE CONSECUTIVE STARTLINE 1 REPLACENULL FIELD "Campo_1" C AT 1 DEC 0 WID 8 PIC "" AS "" FIELD "Campo_2" C AT 9 DEC 0 WID 8 PIC "" AS "" FIELD "Campo_3" C AT 17 DEC 0 WID 8 PIC "" AS "" FIELD "Campo_4" C AT 25 DEC 0 WID 11 PIC "" AS "" FIELD "Campo_5" C AT 36 DEC 0 WID 1 PIC "" AS "" FIELD "Campo_6" C AT 37 DEC 0 WID 1 PIC "" AS "" FIELD "Campo_7" C AT 38 DEC 0 WID 1 PIC "" AS "" FIELD "Campo_8" N AT 39 DEC 2 WID 4 PIC "" AS "" FIELD "Campo_9" N AT 43 DEC 2 WID 4 PIC "" AS "" FIELD "Campo_10" C AT 47 DEC 0 WID 2 PIC "" AS "" FIELD "Campo_11" C AT 49 DEC 0 WID 2 PIC "" AS "" FIELD "Campo_12" C AT 51 DEC 0 WID 1 PIC "" AS "" 
-^INDEX    IxPadronRGSCUIT                                                     PadronRGS                                                         "" "IxPadronRGSCUIT.INX" 
-*INDEX ON CUIT TO "IXPADRONRGSCUIT"
-^INDEX    IxRGCUIT                                                            RG                                                                "" "IxRGCUIT.INX" 
-*INDEX ON CUIT TO "IXRGCUIT"
 ^REPORT   Vista_predeterminada                                                ProveedoresSAP                                                    D,T.
 [SKIP] 0
 [TLINES] 1
@@ -233,3 +224,12 @@ AlicuotaARBA         WIDTH 13 PICTURE ""
 [LINE] 1
 AlicuotaCABA         PICTURE ""
 ^OPEN b,T,S08_Armar;a,F,ControlPadrones;b,T,S03_Configuracion;b,T,S04_Importar;f,F,ProveedoresSAP;
+^INDEX    IxPadronRGSCUIT                                                     PadronRGS                                                         "" "IxPadronRGSCUIT.INX" 
+*INDEX ON CUIT TO "IXPADRONRGSCUIT"
+^INDEX    IxRGCUIT                                                            RG                                                                "" "IxRGCUIT.INX" 
+*INDEX ON CUIT TO "IXRGCUIT"
+^FORMAT   ProveedoresSAP                                                      ProveedoresSAP                                                    "" "ProveedoresSAP.fil" 0 ASCII 
+[PARENT_FOLDER_ID] 1577449309
+[LASTVIEW] "Vista_predeterminada"
+[RETRIEVE] 0
+[REFRESH] EXCEL "ProveedoresSAP.fil" FROM "S:\ACL\Control\Archivos\ProveedoresSAP.xlsx" TABLE "SAP$" KEEPTITLE FIELD "Acreedor" N WID 6 DEC 0 AS "" FIELD "N__ident_fis_1" C WID 16 AS ""
