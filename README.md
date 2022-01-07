@@ -1,6 +1,93 @@
 # ControlPadrones
 Control de Padron SAP con padrones de ARBA y CABA
 ---
+De: Marina Mariel Chavez 
+Enviado el: jueves, 6 de enero de 2022 14:59
+Para: Miguel Angel Cabrera <miguel.cabrera@grupocarsa.com>
+Asunto: RE: Cruce padrones-proveedores SAP
+
+Buenísimo!
+
+Ahora sí, entonces para poder programar debería poner nombre a los padrones y armar dos listas para ambos padrones?
+
+Marina
+---
+De: Miguel Angel Cabrera 
+Enviado el: jueves, 6 de enero de 2022 15:32
+Para: Marina Mariel Chavez <marina.chavez@grupocarsa.com>
+Asunto: RE: Cruce padrones-proveedores SAP
+
+Hola, ok
+
+Te paso como quedaría si tiene Alicuota lo trae y si no lo deja vacío.
+
+Miguel Angel Cabrera
+Auditoria interna
+Tel: (54) 0362-4456000 - Interno 3820
+---
+De: Marina Mariel Chavez 
+Enviado el: jueves, 6 de enero de 2022 14:59
+Para: Miguel Angel Cabrera <miguel.cabrera@grupocarsa.com>
+Asunto: RE: Cruce padrones-proveedores SAP
+
+Hola Migue,
+
+Recién pude hacer un control del cruce que hiciste.
+
+Hay algo nada más que habría que ver, y es el caso de los proveedores que no están en el padrón, ya sea de ARBA o CABA, no debería traer alícuota 0 debería traer el campo vacío, porque a los que tienen alícuota 0 se les asigna el indicador que corresponde y a los que no están no se les carga indicador alguno.
+
+Te paso dos casos:
+
+CABA (Cruce mío)
+ 
+
+CABA (Cruce Miguel)
+ 
+
+Bs. As. (Cruce mío)
+ 
+
+Bs. As. (Cruce Miguel)
+ 
+
+Se podrá hacer algo para que no traiga 0?
+
+
+Marina Mariel Chavez
+Impuestos
+Predio 404 - Ruta N. Avellaneda Km. 15,5 
+(3500) Resistencia-Chaco
+Tel: (54) 0362 – 4456 000 int.3022
+marina.chavez@grupocarsa.com
+---
+De: Miguel Angel Cabrera 
+Enviado el: miércoles, 5 de enero de 2022 10:29
+Para: Marina Mariel Chavez <marina.chavez@grupocarsa.com>
+Asunto: RE: Cruce padrones-proveedores SAP
+
+Hola, buen día
+
+Ok, te paso como quedaría el archivo. Lo hice con ACL porque a la compu que tengo no le da para hacerlo con Excel, pero se puede hacer si tenes una maquina con mas recursos.
+
+Lo dejé en la carpeta //ACL/Control
+En la carpeta //ACL/Control/Archivos están los archivos que necesito para comparar, el de proveedores SAP, PadronRGS (lo tomo como ARBA) y RG (lo tomo como CABA). 
+Para la alícuota que muestro estoy tomando la columna 9 de ambos padrones.
+
+Esto lo puedo programar en automático, tendrías que dejar ambos padrones actualizados con un nombre determinado en alguna carpeta para que el programa los levante y genere.
+
+Saludos.
+
+Miguel Angel Cabrera
+Auditoria interna
+Tel: (54) 0362-4456000 - Interno 3820
+---
+De: Marina Mariel Chavez 
+Enviado el: miércoles, 5 de enero de 2022 06:43
+Para: Miguel Angel Cabrera <miguel.cabrera@grupocarsa.com>
+Asunto: RE: Cruce padrones-proveedores SAP
+
+
+
 Hola Migue, buen día!
 
 En esa planilla está todo lo que yo hago, pero solamente necesito cruzar la hoja 4, que es donde están todos los proveedores de SAP con su número de proveedor y CUIT con el padrón, ya sea de ARBA o CABA, y que el cruce me traiga la alícuota que tenga, en caso de que corresponda tenga alícuota, hay muchos que no están en los padrones y queda vacía la celda.
